@@ -1,1 +1,1 @@
-# 8700_AI_Project
+# COMP 8700: Project
