@@ -13,7 +13,7 @@ for DIR in */; do
       cd "$in_path/$DIR/$subDir/$subsubDir" || return
       for FILE in *; do
         newname=$(echo "$DIR$subsubDir$FILE" | tr -d "/")
-        cp "$FILE" $out_path/"$newname"
+        cp "$FILE" $out_path/"$newname.png"
       done
     done
   done
