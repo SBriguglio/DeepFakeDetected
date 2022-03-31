@@ -8,10 +8,15 @@ by the VidTIMIT dataset.
 Care should be taken to review the shell scripts and modify them as needed, depending on
 where your dataset files are located on your system.
 
+The ```cropface.py``` utility will crop all image files in the ```../Processed/deepfake```
+and ```../Processed/originals``` directories. It will output these files to the ```.../Processed/cropped```
+directory in two separate folders. You should review this code to ensure it works with your
+environment. You can expect processing times of about 900-1200 images/minute.
+
 ## IMPORTANT NOTE
 You will need to remove the audio files from the VidTIMIT dataset for the ```prep_original_images.sh```
 script to work properly. The shell scripts were also placed appropriately within the 
-dataset folders. **They will not work from this directory**.Additionally, we only used the folders from the VidTIMIT dataset
+dataset folders. **They will not work from this directory**. Additionally, we only used the folders from the VidTIMIT dataset
 which were used by the authors of the DeepfakeTIMIT dataset:
 - fadg0
 - faks0
