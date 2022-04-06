@@ -33,7 +33,7 @@ def crop(resize_x=200, resize_y=200, sample_rate=1):
     # change something.
     if sample_rate == 1:
         # process deepfake images
-        '''for i in tqdm(os.listdir('../deepfakes'), desc="Cropping Deepfakes (this can take a while)..."):
+        for i in tqdm(os.listdir('../deepfakes'), desc="Cropping Deepfakes (this can take a while)..."):
             filename = str(i)
             try:
                 img = cv2.imread('../deepfakes/' + filename, cv2.IMREAD_UNCHANGED)
@@ -41,7 +41,7 @@ def crop(resize_x=200, resize_y=200, sample_rate=1):
                 cv2.imwrite('../cropped/deepfakes/' + filename, faces)
             except:
                 print("File couldn't be cropped: {}".format(filename))
-        '''
+
         # process original images
         for i in tqdm(os.listdir('../originals'), desc="Cropping Originals (this can take a while)..."):
             filename = str(i)
@@ -84,3 +84,4 @@ def crop(resize_x=200, resize_y=200, sample_rate=1):
 
 if __name__ == '__main__':
     crop(200, 200, 1)
+

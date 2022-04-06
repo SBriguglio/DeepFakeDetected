@@ -22,39 +22,41 @@ from termcolor import colored
 seed = 1337
 np.random.seed(seed)
 tf.random.set_seed(seed)
-image_path = "../DeepFakeDetected/resources/Processed/cropped"
+image_path = "../DeepFakeDetected/resources/Processed/split"
+train_path = image_path + "/train"
+val_path = image_path + "/validate"
 models_path = "../DeepFakeDetected/models"
 df_path = image_path + "/deepfakes/"
 or_path = image_path + "/originals/"
 image_size = (512, 384)  # (512, 384)
 batch_size = 32
-validation_split = 0.2
+# validation_split = 0.2 # Must be set manually below when data is manually split
 epochs = 15
 
 
 def test():
-    training_set = keras.preprocessing.image_dataset.image_dataset_from_directory(image_path, batch_size=batch_size,
+    training_set = keras.preprocessing.image_dataset.image_dataset_from_directory(train_path, batch_size=batch_size,
                                                                                   image_size=image_size,
-                                                                                  validation_split=validation_split,
+                                                                                  validation_split=0.001,
                                                                                   subset="training", seed=seed)
-    validation_set = keras.preprocessing.image_dataset.image_dataset_from_directory(image_path, batch_size=batch_size,
+    validation_set = keras.preprocessing.image_dataset.image_dataset_from_directory(val_path, batch_size=batch_size,
                                                                                     image_size=image_size,
-                                                                                    validation_split=validation_split,
+                                                                                    validation_split=0.999,
                                                                                     subset="validation", seed=seed)
 
     num_classes = len(training_set.class_names)
 
     model = Sequential([
-      Rescaling(1./255, input_shape=(image_size[0], image_size[1], 3)),
-      Conv2D(16, 3, padding='same', activation='relu'),
-      MaxPooling2D(),
-      Conv2D(32, 3, padding='same', activation='relu'),
-      MaxPooling2D(),
-      Conv2D(64, 3, padding='same', activation='relu'),
-      MaxPooling2D(),
-      Flatten(),
-      Dense(128, activation='relu'),
-      Dense(num_classes)
+        Rescaling(1./255, input_shape=(image_size[0], image_size[1], 3)),
+        Conv2D(16, 3, padding='same', activation='relu'),
+        MaxPooling2D(),
+        Conv2D(32, 3, padding='same', activation='relu'),
+        MaxPooling2D(),
+        Conv2D(64, 3, padding='same', activation='relu'),
+        MaxPooling2D(),
+        Flatten(),
+        Dense(128, activation='relu'),
+        Dense(num_classes)
     ])
 
     model.compile(optimizer='adam',
@@ -62,9 +64,11 @@ def test():
                   metrics=['accuracy'])
 
     history = model.fit(
-      training_set,
-      validation_data=validation_set,
-      epochs=epochs,
+        training_set,
+        validation_data=validation_set,
+        epochs=epochs,
+        shuffle=True,
+        use_multiprocessing=True
     )
 
     acc = history.history['accuracy']
