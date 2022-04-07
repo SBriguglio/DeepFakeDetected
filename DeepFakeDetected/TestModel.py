@@ -22,7 +22,7 @@ from termcolor import colored
 seed = 1337
 np.random.seed(seed)
 tf.random.set_seed(seed)
-image_path = "../DeepFakeDetected/resources/Processed/split"
+image_path = "../DeepFakeDetected/resources/Processed/split_cropped"
 train_path = image_path + "/train"
 val_path = image_path + "/validate"
 models_path = "../DeepFakeDetected/models"
@@ -31,7 +31,7 @@ or_path = image_path + "/originals/"
 image_size = (512, 384)  # (512, 384)
 batch_size = 32
 # validation_split = 0.2 # Must be set manually below when data is manually split
-epochs = 15
+epochs = 100
 
 
 def test():
@@ -46,6 +46,15 @@ def test():
 
     num_classes = len(training_set.class_names)
 
+    # Load Model (should really stop this from being hard-coded)
+    # '''
+    modelin_name = "MS_Cropped_a10000_va08457"
+    min_path = models_path + "/" + modelin_name
+    model = keras.models.load_model(min_path)
+    # '''
+
+    # Define and Compiling Model
+    '''
     model = Sequential([
         Rescaling(1./255, input_shape=(image_size[0], image_size[1], 3)),
         Conv2D(16, 3, padding='same', activation='relu'),
@@ -58,11 +67,14 @@ def test():
         Dense(128, activation='relu'),
         Dense(num_classes)
     ])
-
+    
     model.compile(optimizer='adam',
                   loss=SparseCategoricalCrossentropy(from_logits=True),
                   metrics=['accuracy'])
+    
+    '''
 
+    # Train the model
     history = model.fit(
         training_set,
         validation_data=validation_set,
@@ -71,6 +83,7 @@ def test():
         use_multiprocessing=True
     )
 
+    # Plot training history
     acc = history.history['accuracy']
     val_acc = history.history['val_accuracy']
 
@@ -96,7 +109,7 @@ def test():
     # prompts to save model
     # save(model)
     # or, just save model directly
-    model_name = "UC_e50_(VAL_ACC_HERE)"
+    model_name = "MS_Cropped_axxxxxx_vaxxxxx"
     m_path = models_path + "/" + model_name
     model.save(m_path)
     print(colored("Model has been saved: {}".format(m_path), "blue"))
