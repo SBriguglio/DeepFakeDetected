@@ -53,7 +53,7 @@ def home():
             if class_pred[0] == 1:
                 flash('Original')
             print(UPLOAD_FOLDER+'\\'+filename)
-            #os.remove(UPLOAD_FOLDER+'\\'+filename)
+            os.remove(UPLOAD_FOLDER+'\\'+filename)
     return render_template('front.html')
 
 def allowed_file(filename):
